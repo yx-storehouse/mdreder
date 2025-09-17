@@ -1,31 +1,246 @@
-# Docsify Template
+### 检查项管理
 
-> A simple [Docsify](https://github.com/docsifyjs/docsify/) template for creating Markdown-based documentation sites, with no build process required.
+#### 基本信息
 
-## Site Setup
+- **Path:** `/checkItem`
+- **Method:** Various (POST, GET, PUT, DELETE)
 
-### Static Webserver
-Upload these template files to any static web server. The file `.nojekyll` is only required if hosting the site on GitHub Pages and otherwise can be removed.
+---
 
-### GitHub Pages
+### 1. 新增检查项
+#### 请求描述
 
-#### Hosting Site
+| 名称          | 类型      | 是否必须 | 描述             | 默认值   |
+|---------------|-----------|----------|------------------|----------|
+| **Content-Type** | `application/json` | 是        | 请求体格式       | -        |
 
-To host this template on GitHub Pages do the following:  
+#### Body
 
-1. Log into GitHub if you have not done so already
-2. Tap the **Use this template** button in the upper-right of this GitHub Repository and choose **Create a new repository**
-3. Enter a name for your new Repository and then tap the **Create repository** button
-4. Once your new Repostitory is created go to **Settings**, then select **Pages** from the left-hand sidebar, and under **Branch** choose **main** and then tap the **Save** button
-5. Wait a minute or two and refresh the same **Pages** page - once your site is ready a message will be displayed at the top of the screen along with a site link and a **Visit site** button
+| 名称      | 类型      | 是否必须 | 描述             | 默认值   |
+|-----------|-----------|----------|------------------|----------|
+| **id**     | `Integer` | 否        | 主键             | -        |
+| **code**   | `String`  | 是        | 项目编码         | -        |
+| **name**   | `String`  | 是        | 项目名称         | -        |
+| **sex**    | `String`  | 是        | 适用性别         | -        |
+| **age**    | `String`  | 是        | 适用年龄范围     | -        |
+| **price**  | `Float`   | 是        | 价格             | -        |
+| **type**   | `String`  | 是        | 检查项类型       | -        |
+| **remark** | `String`  | 否        | 项目说明         | -        |
+| **attention** | `String` | 否        | 注意事项         | -        |
 
-#### Editing Content
+#### 响应数据
 
-How about editing the content of your new Docsify site on GitHub Pages? View the Markdown page you want to edit (for example, **README.md**) and tap the **Pencil Icon**, then save any changes by tapping the green **Commit changes...** button. In just a few moments the Docsify site will be automatically updated to reflect those changes.
+| 名称      | 类型      | 是否必须 | 描述             | 默认值   |
+|-----------|-----------|----------|------------------|----------|
+| **flag**   | `boolean` | 是        | 执行结果，true为成功，false为失败 | -        |
+| **message**| `String`  | 是        | 返回结果信息     | -        |
+| **data**   | `Object`  | 否        | 返回数据         | -        |
 
-### Viewing Locally 
-Run `npx serve .` (Node.js users) or `python -m http.server 8000` (Python users) in the repo folder to serve run locally.
+#### 返回描述
 
-## Docsify Documentation
+1. **成功地址**
+   - `http://<domain>/checkItem/addCheckItem`
 
-To learn more about using Docsify, visit https://docsify.js.org.
+2. **返回HTTP状态码**
+   - 201 OK
+   - 400 请求参数错误
+   - 507 服务器数据库异常
+
+3. **示例**
+   ```json
+   {
+     "flag": true,
+     "message": "新增检查项成功",
+     "data": null
+   }
+   ```
+
+---
+
+### 2. 分页查询检查项
+#### 请求描述
+
+| 名称          | 类型      | 是否必须 | 描述             | 默认值   |
+|---------------|-----------|----------|------------------|----------|
+| **Content-Type** | `application/json` | 是        | 请求体格式       | -        |
+
+#### Body
+
+| 名称          | 类型      | 是否必须 | 描述             | 默认值   |
+|---------------|-----------|----------|------------------|----------|
+| **currentPage** | `Integer` | 是        | 当前页码         | -        |
+| **pageSize**  | `Integer` | 是        | 每页记录数       | -        |
+| **queryString**| `String`  | 否        | 查询条件         | -        |
+
+#### 响应数据
+
+| 名称      | 类型      | 是否必须 | 描述             | 默认值   |
+|-----------|-----------|----------|------------------|----------|
+| **flag**   | `boolean` | 是        | 执行结果，true为成功，false为失败 | -        |
+| **message**| `String`  | 是        | 返回结果信息     | -        |
+| **data**   | `Object`  | 是        | 分页数据         | -        |
+
+#### 返回描述
+
+1. **成功地址**
+   - `http://<domain>/checkItem/findPage`
+
+2. **返回HTTP状态码**
+   - 200 OK
+   - 400 请求参数错误
+   - 507 服务器数据库异常
+
+3. **示例**
+   ```json
+   {
+     "flag": true,
+     "message": "查询检查项成功",
+     "data": {
+       "total": 10,
+       "rows": [
+         {
+           "id": 1,
+           "code": "C001",
+           "name": "血液检查",
+           "sex": "男",
+           "age": "20-50",
+           "price": 100.0,
+           "type": "检查",
+           "remark": "无",
+           "attention": "空腹"
+         }
+       ]
+     }
+   }
+   ```
+
+---
+
+### 3. 删除检查项
+#### 请求描述
+
+| 名称          | 类型      | 是否必须 | 描述             | 默认值   |
+|---------------|-----------|----------|------------------|----------|
+| **id**        | `Integer` | 是        | 检查项ID         | -        |
+
+#### 响应数据
+
+| 名称      | 类型      | 是否必须 | 描述             | 默认值   |
+|-----------|-----------|----------|------------------|----------|
+| **flag**   | `boolean` | 是        | 执行结果，true为成功，false为失败 | -        |
+| **message**| `String`  | 是        | 返回结果信息     | -        |
+| **data**   | `Object`  | 否        | 返回数据         | -        |
+
+#### 返回描述
+
+1. **成功地址**
+   - `http://<domain>/checkItem/deleteById/{id}`
+
+2. **返回HTTP状态码**
+   - 200 OK
+   - 400 请求参数错误
+   - 507 服务器数据库异常
+
+3. **示例**
+   ```json
+   {
+     "flag": true,
+     "message": "删除检查项成功",
+     "data": null
+   }
+   ```
+
+---
+
+### 4. 更新检查项
+#### 请求描述
+
+| 名称          | 类型      | 是否必须 | 描述             | 默认值   |
+|---------------|-----------|----------|------------------|----------|
+| **Content-Type** | `application/json` | 是        | 请求体格式       | -        |
+
+#### Body
+(与新增检查项的Body相同)
+
+#### 响应数据
+
+| 名称      | 类型      | 是否必须 | 描述             | 默认值   |
+|-----------|-----------|----------|------------------|----------|
+| **flag**   | `boolean` | 是        | 执行结果，true为成功，false为失败 | -        |
+| **message**| `String`  | 是        | 返回结果信息     | -        |
+| **data**   | `Object`  | 否        | 返回数据         | -        |
+
+#### 返回描述
+
+1. **成功地址**
+   - `http://<domain>/checkItem/updateCheckItem`
+
+2. **返回HTTP状态码**
+   - 200 OK
+   - 400 请求参数错误
+   - 507 服务器数据库异常
+
+3. **示例**
+   ```json
+   {
+     "flag": true,
+     "message": "编辑检查项成功",
+     "data": null
+   }
+   ```
+
+---
+
+### 5. 查询所有检查项
+#### 请求描述
+
+| 名称          | 类型      | 是否必须 | 描述             | 默认值   |
+|---------------|-----------|----------|------------------|----------|
+| **Content-Type** | `application/json` | 否        | 请求体格式       | -        |
+
+#### 响应数据
+
+| 名称      | 类型      | 是否必须 | 描述             | 默认值   |
+|-----------|-----------|----------|------------------|----------|
+| **flag**   | `boolean` | 是        | 执行结果，true为成功，false为失败 | -        |
+| **message**| `String`  | 是        | 返回结果信息     | -        |
+| **data**   | `List<CheckItem>` | 是        | 检查项列表       | -        |
+
+#### 返回描述
+
+1. **成功地址**
+   - `http://<domain>/checkItem/findAll`
+
+2. **返回HTTP状态码**
+   - 200 OK
+   - 400 请求参数错误
+   - 507 服务器数据库异常
+
+3. **示例**
+   ```json
+   {
+     "flag": true,
+     "message": "查询检查项成功",
+     "data": [
+       {
+         "id": 1,
+         "code": "C001",
+         "name": "血液检查",
+         "sex": "男",
+         "age": "20-50",
+         "price": 100.0,
+         "type": "检查",
+         "remark": "无",
+         "attention": "空腹"
+       }
+     ]
+   }
+   ```
+
+---
+
+### 还需要哪些文件
+为了更详细地制作接口文档，我还需要以下信息：
+- **异常处理细节** (可能的异常类型和对应的错误码说明)。
+- **业务逻辑说明** (每个接口的具体功能和使用场景)。
+- **域名或具体API服务器地址** (如 `<domain>` 的实际值)。
